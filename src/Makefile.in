@@ -1,0 +1,49 @@
+
+ifdef NATIVECAML
+  CAMLC         = ocamlopt
+  CAMLLINK      = ocamlopt
+  CAMLLIB       = $(shell ocamlopt -where)
+  CMO           = cmx
+  CMXA          = cmxa
+  EXEEXT        = .asm
+else
+  CAMLC         = ocamlc
+  CAMLLINK      = ocamlc
+  CAMLLIB       = $(shell ocamlc -where)
+  CMO           = cmo
+  CMXA          = cma
+  EXEEXT        = .byte
+endif
+
+CILLIB = @cil_libdir@
+EXTLIBS = $(CAMLLIB)/str.$(CMXA) $(CAMLLIB)/unix.$(CMXA) $(CILLIB)/cil.$(CMXA) 
+
+TARGET = ../bin/mscc$(EXEEXT).exe
+
+CMIS = cilextra.cmi globinit.cmi markutil.cmi wrappers.cmi csafesplit.cmi \
+       memsafe.cmi optim.cmi
+CMOS = cilextra.$(CMO) csafeutil.$(CMO) globinit.$(CMO) markutil.$(CMO) \
+       wrappers.$(CMO) csafechecks.$(CMO) metadata.$(CMO) allocinfo.$(CMO) \
+       updncasts.$(CMO) csafesplit.$(CMO) memsafe.$(CMO) \
+       optim.$(CMO) main.$(CMO) 
+
+%.$(CMO): %.ml
+	$(CAMLC) -I $(CILLIB) -c $<
+
+%.cmi: %.mli
+	$(CAMLC) -I $(CILLIB) -c $<
+
+.PHONY: default
+default: $(TARGET)
+
+$(TARGET): $(CMIS) $(CMOS) $(EXTLIBS)
+	$(CAMLC) -o $(TARGET) -cclib -L$(CILLIB) $(EXTLIBS) $(CMOS)
+
+.PHONY: clean
+clean: 
+	-rm -if *.o *.a *.cmi *.cmo *.cmx *.cma *.cmxa $(TARGET)
+
+.PHONY: distclean
+distclean: clean 
+	-rm -if Makefile
+

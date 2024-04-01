@@ -1,0 +1,60 @@
+
+CC = gcc
+CFLAGS = -g -O2 
+
+TARGETS = fopen insertsort matrix1 matrix2 addrof arrayptr dblfree \
+          downcast-b downcast morecasts ptrarith-b ptrarith uninit union
+
+.c.o: 
+	$(CC) -c $(CFLAGS) $< 
+
+all: $(TARGETS)
+
+fopen: fopen.o
+	$(CC) -o $@ $(CFLAGS) $^ 
+
+insertsort: insertsort.o
+	$(CC) -o $@ $(CFLAGS) $^ 
+
+matrix1: matrix1.o
+	$(CC) -o $@ $(CFLAGS) $^ 
+
+matrix2: matrix2.o
+	$(CC) -o $@ $(CFLAGS) $^ 
+
+addrof: addrof.o
+	$(CC) -o $@ $(CFLAGS) $^ 
+
+arrayptr: arrayptr.o
+	$(CC) -o $@ $(CFLAGS) $^ 
+
+dblfree: dblfree.o
+	$(CC) -o $@ $(CFLAGS) $^ 
+
+downcast-b: downcast-b.o
+	$(CC) -o $@ $(CFLAGS) $^ 
+
+downcast: downcast.o
+	$(CC) -o $@ $(CFLAGS) $^ 
+
+morecasts: morecasts.o
+	$(CC) -o $@ $(CFLAGS) $^ 
+
+ptrarith-b: ptrarith-b.o
+	$(CC) -o $@ $(CFLAGS) $^ 
+
+ptrarith: ptrarith.o
+	$(CC) -o $@ $(CFLAGS) $^ 
+
+uninit: uninit.o
+	$(CC) -o $@ $(CFLAGS) $^ 
+
+union: union.o
+	$(CC) -o $@ $(CFLAGS) $^ 
+
+clean:
+	rm -if *.o *.safe.c $(TARGETS) 
+
+distclean: clean
+	rm -if Makefile
+

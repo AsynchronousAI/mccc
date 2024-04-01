@@ -1,0 +1,6 @@
+
+use lib "@cil_datadir@"; # Where are the libraries 
+$::archos    = "x86_LINUX";
+$::cc        = "gcc";
+$::cilhome   = "@mscc_home@";
+$::default_mode = "GNUCC";

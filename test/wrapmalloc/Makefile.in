@@ -1,0 +1,30 @@
+CFLAGS = -g -Wall 
+LIBCFLAGS = $(CFLAGS) -fPIC
+LDFLAGS = -shared -ldl 
+CC = gcc
+
+LIBRARY_TARGET = malloc_wrapper.so
+DRIVER_TARGET = testmalloc
+
+.PHONY: all
+all: $(LIBRARY_TARGET) $(DRIVER_TARGET)
+
+$(LIBRARY_TARGET): malloc_wrapper.o hashtbl.o 
+	$(CC) $(LDFLAGS) -o $@ $^
+
+$(DRIVER_TARGET): testmalloc.o
+	$(CC) -o $@ $<
+
+malloc_wrapper.o: malloc_wrapper.c hashtbl.h
+	$(CC) -c $(LIBCFLAGS) $<
+
+hashtbl.o: hashtbl.c hashtbl.h
+	$(CC) -c $(LIBCFLAGS) $<
+
+.PHONY: clean
+clean:
+	$(RM) -if *.o $(LIBRARY_TARGET) $(DRIVER_TARGET) 
+
+.PHONY: distclean
+distclean: clean
+	$(RM) -if Makefile

@@ -1,0 +1,19 @@
+
+.PHONY: small
+small:
+	make -k CC="@mscc_home@/bin/mscc --mode=GNUCC" -C small
+
+.PHONY: wrapmalloc
+wrapmalloc:
+	make -k -C wrapmalloc
+
+.PHONY: clean	
+clean: 
+	make -k -C small clean
+	make -k -C wrapmalloc clean
+
+.PHONY: distclean
+distclean: 
+	make -k -C small distclean
+	make -k -C wrapmalloc distclean
+	rm -if Makefile

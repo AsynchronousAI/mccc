@@ -1,0 +1,26 @@
+
+.PHONY: all 
+all: 
+	make -k -C src
+	make -k NATIVECAML=1 -C src
+	make -k -C lib
+
+.PHONY: test
+test:
+	make -k CC="@mscc_home@/bin/mscc --mode=GNUCC" -C test
+
+.PHONY: clean	
+clean: 
+	make -k -C src clean
+	make -k NATIVECAML=1 -C src clean
+	make -k -C lib clean
+	make -k -C test clean
+
+.PHONY: distclean
+distclean: 
+	make -k -C src clean
+	make -k NATIVECAML=1 -C src distclean
+	make -k -C lib distclean
+	make -k -C test distclean
+	rm -if bin/CilConfig.pm
+	rm -if Makefile

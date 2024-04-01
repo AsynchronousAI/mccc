@@ -1,0 +1,20 @@
+
+AR = ar
+RM = rm
+CC = gcc
+CFLAGS = -I../include -O2
+
+OBJS = capability.o cmemsafelib.o
+
+TARGET = cmemsafelib.a
+
+all: $(TARGET)
+
+$(TARGET): $(OBJS)
+	$(AR) r $@ $^
+
+clean:
+	$(RM) -if $(OBJS) $(TARGET)
+
+distclean: clean
+	$(RM) -if Makefile

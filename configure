@@ -1,0 +1,85 @@
+#! /bin/sh
+
+mscc_home="`pwd`"
+
+cil_prefix="/usr/local"
+cil_libdir='${cil_prefix}/lib/cil'
+cil_datadir='${cil_prefix}/share/cil'
+
+TARGETS="
+   bin/CilConfig.pm 
+   src/Makefile
+   lib/Makefile
+   test/Makefile
+   test/small/Makefile
+   test/wrapmalloc/Makefile
+   Makefile"
+
+ac_prev=
+for ac_option 
+do
+  # If the previous option needs an argument, assign it.
+  if test -n "$ac_prev"; then
+    eval "$ac_prev=\$ac_option"
+    ac_prev=
+    continue
+  fi
+
+  ac_optarg=`expr "x$ac_option" : 'x[^=]*=\(.*\)'`
+
+  case $ac_option in
+
+  --cil-prefix=* | --cil_prefix=*)
+    cil_prefix=$ac_optarg ;;
+
+  --cil-libdir=* | --cil_libdir=*)
+    cil_libdir=$ac_optarg ;;
+
+  --cil-datadir=* | --cil_datadir=*)
+    cil_datadir=$ac_optarg ;;
+
+  --help | *)
+    echo "Available options:"
+    echo "   --cil-prefix"
+    echo "   --cil-libdir"
+    echo "   --cil-datadir"
+    exit 1
+    ;;
+  esac
+done
+
+for ac_var in cil_libdir cil_datadir
+do
+  eval ac_val=$`echo $ac_var`
+  eval $ac_var="$ac_val"
+done
+
+echo "****************************************************************************"
+echo "* Configuring the following:"
+echo "*     CIL library: $cil_libdir"
+echo "*     CIL data:    $cil_datadir"
+echo "*"
+echo "*     to change these, use the --cil-prefix, --cil-libdir,"
+echo "*     and/or --cil-datadir options."
+
+if [[ ! -d $cil_libdir ]]
+then
+   echo "* WARNING: directory $cil_libdir does not exist."
+   echo "* Make will fail unless you install the CIL libraries at this location."
+fi
+
+if [[ ! -d $cil_datadir ]]
+then
+   echo "* WARNING: directory $cil_libdir does not exist."
+   echo "* Make will fail unless you install the CIL data files at this location."
+fi
+echo "****************************************************************************"
+
+for f in $TARGETS; do
+  echo "Generating $f"
+  sed -e "s,\@mscc_home\@,${mscc_home},g;s,\@cil_libdir\@,${cil_libdir},g;s,\@cil_datadir\@,${cil_datadir},g" "${f}.in" > "$f"
+done
+
+echo ""
+echo "Now compile \"mscc\" with:  'make'"
+
